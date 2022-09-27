@@ -2,6 +2,10 @@ import discord
 import os
 import requests
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.all()
 
@@ -59,4 +63,4 @@ async def on_message(message):
         await message.channel.send(quote)
 
 
-client.run(os.getenv('TOKEN'))
+client.run(TOKEN)
