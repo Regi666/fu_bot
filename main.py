@@ -33,6 +33,13 @@ async def on_ready():
     # PRINTS HOW MANY GUILDS / SERVERS THE BOT IS IN.
     print("FUBOT is in " + str(guild_count) + " guilds.")
 
+@client.event
+async def on_member_join(member):
+    await member.create_dm()
+    await member.dm_channel.send(
+        f'Hi {member.name}, welcome to my Discord server!'
+    )
+
 
 @client.event
 async def on_message(message):
