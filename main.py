@@ -29,10 +29,17 @@ async def on_ready():
     # LOOPS THROUGH ALL THE GUILD / SERVERS THAT THE BOT IS ASSOCIATED WITH.
     for guild in client.guilds:
         # PRINT THE SERVER'S ID AND NAME.
-        print(f"- {guild.id} (name: {guild.name})")
+        print(f"- {guild.id} (name: {guild.name}) ")
 
         # INCREMENTS THE GUILD COUNTER.
         guild_count = guild_count + 1
+
+        text_channel_list = []
+        for channel in guild.text_channels:
+            text_channel_list.append(channel)
+            if channel.name == "fuehrerhq":
+                await channel.send(f"fu_bot is back!")
+
 
     # PRINTS HOW MANY GUILDS / SERVERS THE BOT IS IN.
     print("FUBOT is in " + str(guild_count) + " guilds.")
