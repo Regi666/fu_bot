@@ -18,6 +18,11 @@ def get_quote():
     quote = json_data[0]['q'] + " -" + json_data[0]['a']
     return (quote)
 
+async def arp(message):
+    command = os.popen('sudo arp-scan --interface=wlan0 --localnet -x')
+    await message.channel.send(command.read())
+    print(command.close())
+
 
 @client.event
 async def on_ready():
@@ -68,6 +73,9 @@ async def on_message(message):
     if message.content.startswith('$inspire'):
         quote = get_quote()
         await message.channel.send(quote)
+
+    if message.content.startswith('$arp'):
+        await arp(message)
 
 
 client.run(TOKEN)
