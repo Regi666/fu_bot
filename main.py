@@ -18,25 +18,32 @@ def get_quote():
     quote = json_data[0]['q'] + " -" + json_data[0]['a']
     return (quote)
 
+
 async def arp(message):
     command = os.popen('sudo arp-scan --interface=wlan0 --localnet -x')
     await message.channel.send(command.read())
     print(command.close())
 
 
+def notify():
+    json_data = json.loads(response.text)
+    r = requests.post('https://maker.ifttt.com/trigger/new_kid_in_town/with/key/nL24KQ-9jMFlEyz9XLbgEPfJCeuYhBKa1YhmdOhr1LN', json={
+        "value1": "fritz",
+        "value2": "jetzt"
+    })
+    print(f"Status Code: {r.status_code}, Response: {r.json()}")
+
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
-    # CREATES A COUNTER TO KEEP TRACK OF HOW MANY GUILDS / SERVERS THE BOT IS CONNECTED TO.
     guild_count = 0
 
-    # LOOPS THROUGH ALL THE GUILD / SERVERS THAT THE BOT IS ASSOCIATED WITH.
     for guild in client.guilds:
-        # PRINT THE SERVER'S ID AND NAME.
+
         print(f"- {guild.id} (name: {guild.name}) ")
 
-        # INCREMENTS THE GUILD COUNTER.
         guild_count = guild_count + 1
 
         text_channel_list = []
@@ -45,9 +52,8 @@ async def on_ready():
             if channel.name == "fuehrerhq":
                 await channel.send(f"fu_bot is back!")
 
-
-    # PRINTS HOW MANY GUILDS / SERVERS THE BOT IS IN.
     print("FUBOT is in " + str(guild_count) + " guilds.")
+
 
 @client.event
 async def on_member_join(member):
@@ -64,7 +70,6 @@ async def on_message(message):
         return
 
     if message.content == "hello":
-        # SENDS BACK A MESSAGE TO THE CHANNEL.
         await message.channel.send("hey dirtbag")
 
     if message.content.startswith('$hello'):
@@ -77,5 +82,10 @@ async def on_message(message):
     if message.content.startswith('$arp'):
         await arp(message)
 
+@client.event
+async def on_member_update(before, after):
+    print(f"{after.name} has gone {after.status}.")
+    if str(after.status) == 'online':
+        await client.get_channel(id='fuehrerhq').send('Hello')
 
 client.run(TOKEN)
