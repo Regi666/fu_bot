@@ -8,9 +8,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.all()
-
 client = discord.Client(intents=intents)
-
 
 def get_quote():
     response = requests.get("https://zenquotes.io/api/random")
@@ -26,12 +24,12 @@ async def arp(message):
 
 
 def notify():
-    json_data = json.loads(response.text)
     r = requests.post('https://maker.ifttt.com/trigger/new_kid_in_town/with/key/nL24KQ-9jMFlEyz9XLbgEPfJCeuYhBKa1YhmdOhr1LN', json={
         "value1": "fritz",
         "value2": "jetzt"
     })
-    print(f"Status Code: {r.status_code}, Response: {r.json()}")
+    print(f"Status Code: {r.status_code}, Response: {r.text}")
+    return r
 
 
 @client.event
@@ -82,10 +80,16 @@ async def on_message(message):
     if message.content.startswith('$arp'):
         await arp(message)
 
+    if message.content.startswith('$notify'):
+        r = notify()
+        await message.channel.send(r.text)
+
+
 @client.event
 async def on_member_update(before, after):
     print(f"{after.name} has gone {after.status}.")
     if str(after.status) == 'online':
         await client.get_channel(id='fuehrerhq').send('Hello')
+
 
 client.run(TOKEN)
