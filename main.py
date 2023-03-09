@@ -77,12 +77,14 @@ async def on_message(message):
         quote = get_quote()
         await message.channel.send(quote)
 
-    if message.content.startswith('$arp'):
-        await arp(message)
+    if message.channnel.name == "fuehrerhq":
+        
+        if message.content.startswith('$arp'):
+            await arp(message)
 
-    if message.content.startswith('$notify'):
-        r = notify()
-        await message.channel.send(r.text)
+        if message.content.startswith('$notify'):
+            r = notify()
+            await message.channel.send(r.text)
 
 
 @client.event
